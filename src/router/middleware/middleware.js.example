@@ -1,0 +1,19 @@
+//if need request
+import { exampleRequest } from '@/services/requests'
+
+export default function example({ next, store, Bus }) {
+  return new Promise((resolve, reject) => {
+    if(exampleCondition) {
+      reject(next({ name: 'Example' }))
+    }
+    if(needRequest) {
+      Bus.loading = true
+      return exampleRequest
+        .then(res => {
+          store.dispatch('setExample', res.data.data)
+          resolve()
+        })
+    }
+    resolve()
+  })
+}

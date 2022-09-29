@@ -1,0 +1,155 @@
+.spinner {
+  border-radius: 100%;
+  border: 2px solid;
+  border-left: 2px solid;
+  animation: spin 2.5s infinite linear;
+}
+
+.icon-box {
+  @apply w-5 h-5 flex items-center justify-center;
+  color: inherit;
+  &--large {
+    @apply w-8 h-8;
+  }
+  &--smallest {
+    @apply w-4 h-4;
+  }
+  & svg {
+    object-fit: contain;
+    flex-grow: 1;
+    max-width: 100%;
+    max-height: 100%;
+    fill: currentColor;
+  }
+}
+
+.hide-scrollbar {
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+}
+
+.custom-bar {
+  &::-webkit-scrollbar {
+      @apply w-2;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+      border-radius: 10px;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+      @apply rounded bg-neutral-400;
+  }
+  &::-webkit-scrollbar-thumb:window-inactive {
+    @apply bg-neutral-300
+  }
+}
+
+.snackbar {
+  background-color: var(--primary);
+  @apply font-body z-10 text-white;
+  & .snackbar__action {
+    @apply text-white font-bold;
+  }
+  @screen md {
+    @apply w-full;
+  }
+}
+
+.autocomplete {
+  input {
+    @apply shadow border-t-0 border-r-0 border-b-0 border-l-4 border-primary-200 px-2 border-solid bg-white rounded py-1 w-full font-light text-base h-auto;
+      transition: all .4s ease;
+    &:focus {
+      @apply border-primary-200 border-r-4 border-t-0 border-b-0 shadow-md;
+    }
+    &:hover {
+      @apply border-primary-200;
+    }
+  }
+}
+
+.modal {
+  z-index: 100;
+}
+
+.b-table.lynx-table table,
+.lynx-table {
+  @apply shadow w-full text-left bg-white font-light rounded overflow-hidden border-none;
+    transition: all .4s ease;
+  @screen md {
+    @apply bg-neutral-300;
+  }
+  &:hover {
+    @apply shadow-xl;
+  }
+  thead {
+    @apply bg-neutral-400;
+    th {
+      @apply py-2 px-4 font-normal border-none whitespace-no-wrap;
+    }
+  }
+  &--error {
+    thead {
+      @apply bg-error-base;
+      th {
+        @apply text-white;
+      }
+    }
+  }
+  & tbody {
+    td {
+      @apply py-3 px-4 text-sm text-neutral-700 border-neutral-300 border-b;
+      @screen md {
+        @apply bg-white whitespace-no-wrap;
+      }
+    }
+    tr:last-child td {
+      @apply border-b-0;
+    }
+  }
+  .level {
+    @apply p-4 bg-neutral-300;
+    &:not(.top) {
+      @apply pb-4;
+    }
+  }
+  .table-wrapper:not(:last-child) {
+    @apply mb-0;
+  }
+}
+
+.table td{
+  @apply align-middle;
+}
+
+.select {
+  @apply w-full;
+  select {
+    @apply w-full;
+  }
+}
+
+.service-order-activity-card {
+  @apply pb-8 mb-8 border-neutral-300 border-b-2;
+  &:last-child {
+    @apply border-b-0 mb-0 pb-0;
+  }
+}
+
+.custom-card-info {
+  @apply border-neutral-300 border-b-2 mx-4 p-4;
+  &:hover{
+    @apply bg-neutral-200 rounded;
+  }
+}
+
+
+
+.modal-radius{
+  border-radius: 30px;
+  }

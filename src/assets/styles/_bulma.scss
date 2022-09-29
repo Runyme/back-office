@@ -1,0 +1,76 @@
+$primary: #667EEA;
+// Import Bulma's core
+@import "~bulma/sass/utilities/_all";
+ 
+// Set your colors
+$black: #000000;
+$black-bis: #1A202C;
+$black-bis-invert: findColorInvert($black-bis);
+$black-ter: #2D3748;
+$grey-darker: #4A5568;
+$grey-dark: #718096;
+$grey-light: #A0AEC0;
+$grey-lighter: #CBD5E0;
+$white-ter: #E2E8F0;
+$white-bis: #EDF2F7;
+$white: #FFFFFF;
+$white-bis-invert: findColorInvert($white-bis);
+$primary: $primary;
+$primary-invert: findColorInvert($primary);
+$success: #22c65b;
+$success-invert: findColorInvert($success);
+$danger: #F56565;
+$danger-invert: findColorInvert($danger);
+$info: #2680C2;
+$info-invert: findColorInvert($info);
+$warning: #E9B949;
+$warning-invert: findColorInvert($warning);
+ 
+$colors: (
+ "light": ($white-bis, $white-bis-invert),
+ "dark": ($black-bis, $black-bis-invert),
+ "primary": ($primary, $primary-invert),
+ "danger": ($danger, $danger-invert),
+ "success": ($success, $success-invert),
+ "info": ($info, $info-invert),
+ "warning": ($warning, $warning-invert),
+ "white": ($white, $black),
+ "black": ($black, $white),
+);
+ 
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+ 
+$text: theme('colors.neutral.700');
+ 
+$navbar-item-img-max-height: 50px;
+ 
+$table-head-cell-color: theme('colors.neutral.700');
+$table-cell-border: 1px solid theme('colors.neutral.300');
+$table-striped-row-even-background-color:  heme('colors.neutral.100');
+$table-row-hover-background-color: theme('colors.neutral.100');
+$table-head-cell-border-width: 0;
+$table-cell-border-width: 1px 0 0 0;
+$table-cell-padding: 1rem 1.5rem;
+ 
+$radius-small: .125rem;
+$radius: .25rem;
+$radius-large: .5rem;
+ 
+$input-shadow: none;
+$input-focus-box-shadow-size: 0 0 0 1px;
+$input-focus-box-shadow-color: $link;
+ 
+$label-color: theme('colors.neutral.700');
+$label-weight: 400;
+ 
+$card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$card-footer-background-color: theme('colors.neutral.100');
+ 
+$tag-background-color: #edf2f7;
+ 
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";

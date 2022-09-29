@@ -1,0 +1,9 @@
+@import "colors";
+@import "vendors";
+@tailwind base;
+@import "base";
+@tailwind components;
+@import "components";
+@import "animations";
+@tailwind utilities;
+@import "utilities";

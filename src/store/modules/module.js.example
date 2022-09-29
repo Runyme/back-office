@@ -1,0 +1,30 @@
+import { example } from '@/example/'
+
+const state = {
+  example: null
+}
+
+const getters = {
+  getExample(state) {
+    return state.example
+  }
+}
+
+const mutations = {
+  SET_EXAMPLE(state, payload) {
+    state.example = payload
+  }
+}
+
+const actions = {
+  setExample({commit}, payload) {
+    commit('SET_EXAMPLE', payload)
+  }
+}
+
+export default {
+  state,
+  getters,
+  mutations,
+  actions,
+};

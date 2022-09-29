@@ -1,0 +1,28 @@
+::selection {
+  @apply bg-primary-600 text-neutral-100;
+}
+
+body, html {
+  @apply font-body w-full h-full min-h-screen bg-neutral-200 text-neutral-900;
+}
+
+input,
+textarea,
+button {
+  &:focus { outline: none; }
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow:0 0 0 50px white inset; /* Change the color to your own background color */
+  -webkit-text-fill-color: #333;
+}
+
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 50px white inset;/*your box-shadow*/
+  -webkit-text-fill-color: #333;
+} 
+
+*,
+a:hover {
+  color: inherit;
+}
