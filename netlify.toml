@@ -1,6 +1,7 @@
 [[redirects]]
   from = "/*"
   to = "/index.html"
+  force = true
   status = 200
 [context.production]
   environment = { NODE_VERSION = "14.15.3" }
@@ -8,4 +9,4 @@
   # Define which paths this specific [[headers]] block will cover.
   for = "/*"
   [headers.values]
-  Access-Control-Allow-Origin = ""
+  Access-Control-Allow-Origin = "*"
