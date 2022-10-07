@@ -42,7 +42,7 @@ export default {
         this.backgroundClasses,
         this.textColorClasses,
         {
-          'bg-neutral-600 border-neutral-600': this.disabled && !this.outlined,
+          'bg-runy-base border-neutral-600': this.disabled && !this.outlined,
           'border-neutral-600': this.disabled && this.outlined,
           'px-3 py-2': !this.size,
           'px-2 py-1 text-sm': this.size === 'small',

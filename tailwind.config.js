@@ -11,6 +11,10 @@ module.exports = {
         base: '#4BC0C0',
         light: '#84e8e8'
       },
+      runy:{
+        base: '#5b2885',
+        secondary: '#6a309f'
+      },
       neutral: {
         100: '#F7FAFC',
         200: '#EDF2F7',

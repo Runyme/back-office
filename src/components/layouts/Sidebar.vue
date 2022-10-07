@@ -1,11 +1,11 @@
 <template>
   <div
-    class="w-64 xl:w-56 lg:w-48 md:w-full fixed left-0 top-0 bottom-0 sidebar text-sm text-neutral-100 bg-primary-700 border-t-4 border-primary-200 shadow-xl z-100 flex justify-center transition"
+    class="w-64 xl:w-56 lg:w-48 md:w-full fixed left-0 top-0 bottom-0 sidebar text-sm text-neutral-100 bg-runy-base border-t-4 border-primary-200 shadow-xl z-100 flex justify-center transition"
     :class="{ 'md:opacity-0 md:pointer-events-none': !isOpen }"
   >
     <div class="flex flex-col md:max-w-md w-full py-8 overflow-y-auto hide-scrollbar">
       <div class="flex justify-center relative">
-        <div class="w-24 self-center text-neutral-100">
+        <div>
           <router-link :to="{ name: 'dashboard' }">
             <Logo/>
           </router-link>
@@ -75,7 +75,7 @@
           v-for="item in menuDefaultItems"
           :key="item.id"
           :to="{ name: item.to }"
-          :class="`transition hover:bg-primary-600 py-2 menu-item mt-2 relative cursor-pointer text-lg order-${item.order || '50'}`"
+          :class="`transition hover:bg-runy-secondary py-2 menu-item mt-2 relative cursor-pointer text-lg order-${item.order || '50'}`"
           tag="li"
           active-class="active"
           exact
@@ -91,10 +91,10 @@
         <li
           v-for="submenu in menus.submenus"
           :key="submenu.id"
-          :class="`py-2 transition  hover:bg-primary-600 mt-2 relative order-${submenu.order || '50'}`"
+          :class="`py-2 transition  hover:bg-runy-secondary mt-2 relative order-${submenu.order || '50'}`"
         >
           <b-collapse :open="false">
-            <a href="#" @click.prevent class="hover:bg-primary-600  w-full flex px-4 justify-between items-center relative menu-item text-lg"
+            <a href="#" @click.prevent class="hover:bg-runy-secondary w-full flex px-4 justify-between items-center relative menu-item text-lg"
                slot="trigger">
               <div class="flex">
                 <component :is="`Icon-${submenu.icon}`"/>
@@ -136,7 +136,7 @@
 
 <script>
 
-import Logo from '@/components/svgs/Logo'
+import Logo from '@/components/svgs/RunyMe'
 import SVGMenuMark from '@/components/svgs/MenuMark'
 import FloatList from '@/components/helpers/FloatList'
 import UserAvatar from '@/components/layouts/UserAvatar'
@@ -222,7 +222,7 @@ export default {
                 to: 'empresas.index',
                 icon: 'Search',
               },
-             
+
                  {
                 label: 'Atividades',
                 to: 'empresas.atividades',
@@ -384,7 +384,7 @@ export default {
                 to: 'financeiro.contas-receber',
                 icon: 'Setting',
               },
-              
+
                 {
                 label: 'Subir Faturamentos',
                 to: 'financeiro.upfature',

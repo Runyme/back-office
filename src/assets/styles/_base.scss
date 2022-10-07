@@ -1,5 +1,5 @@
 ::selection {
-  @apply bg-primary-600 text-neutral-100;
+  @apply bg-runy-secondary text-neutral-100;
 }
 
 body, html {
@@ -20,7 +20,7 @@ input:-webkit-autofill {
 input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 50px white inset;/*your box-shadow*/
   -webkit-text-fill-color: #333;
-} 
+}
 
 *,
 a:hover {
