@@ -68,13 +68,12 @@
         this.modalOpened = val
       },
       async downloadRelatorioMensal(empresas_id, competencia) {
-        console.log(competencia)
         this.downloadRelatorioMensalDisable = true
         getRelatorioMensal(empresas_id, competencia).then((response) => {
           if (!response) return
           const linkSource = `data:application/pdf;base64,${response.data}`
           const downloadLink = document.createElement('a')
-          const fileName = `relatorio-mensal-${empresas_id}-${competencia}.pdf`
+          const fileName = `${empresas_id}-relatorio-mensal-${competencia}.pdf`
           downloadLink.href = linkSource
           downloadLink.download = fileName
           downloadLink.click()
