@@ -17,6 +17,7 @@
             @click.native="setModalOpened(true)"
           />
           <Lynx-Button
+            v-if="getEmpresa.regime_tributario === 'SN'"
             class="mt-4 self-start"
             text="Relatório Mensal"
             icon="Document"
