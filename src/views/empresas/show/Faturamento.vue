@@ -16,6 +16,16 @@
             icon-size="4"
             @click.native="setModalOpened(true)"
           />
+          <Lynx-Button
+            class="mt-4 self-start"
+            text="Relatório Mensal"
+            icon="Document"
+            size="small"
+            :disabled="downloadRelatorioMensalDisable"
+            :loading="downloadRelatorioMensalDisable"
+            icon-size="4"
+            @click.native="downloadRelatorioMensal(getEmpresa.id, competencia)"
+          />
         </div>
       </div>
     </b-collapse>
@@ -30,6 +40,10 @@
 
   import FaturamentoImpostosChart from '@/views/charts/empresas/FaturamentoImpostosChart'
   import Details from '@/views/empresas/show/FaturamentoDetails'
+  import { mapGetters } from 'vuex'
+  import { getRelatorioMensal } from '@/services/requests/relatorio'
+  import moment from 'moment'
+
 
   export default {
     name: 'EmpresaShowFaturamento',
@@ -42,6 +56,7 @@
     },
     data() {
       return {
+        downloadRelatorioMensalDisable: false,
         loading: false,
         modalOpened: false,
         showChart: false,
@@ -50,6 +65,30 @@
     methods: {
       setModalOpened(val) {
         this.modalOpened = val
+      },
+      async downloadRelatorioMensal(empresas_id, competencia) {
+        console.log(competencia)
+        this.downloadRelatorioMensalDisable = true
+        getRelatorioMensal(empresas_id, competencia).then((response) => {
+          if (!response) return
+          const linkSource = `data:application/pdf;base64,${response.data}`
+          const downloadLink = document.createElement('a')
+          const fileName = `relatorio-mensal-${empresas_id}-${competencia}.pdf`
+          downloadLink.href = linkSource
+          downloadLink.download = fileName
+          downloadLink.click()
+        }).finally(() => {
+          this.downloadRelatorioMensalDisable = false
+        })
+      }
+    },
+    computed: {
+      ...mapGetters(['getEmpresa']),
+      competencia() {
+        if (moment().format("YYYY-MM-DD") == moment().endOf('month').format('YYYY-MM-DD')) {
+          return moment().format("YYYY-MM-01")
+        }
+       return moment().add(-1,'months').format("YYYY-MM-01")
       }
     }
   }
