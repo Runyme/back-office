@@ -358,7 +358,7 @@ export default {
         (res) => (token = res.data)
       );
 
-      const link = `https://cliente.medb.com.br/assinar-contrato?token=${token}&empresaId=${empresaId}`;
+      const link = `https://cliente.runy.me/assinar-contrato?token=${token}&empresaId=${empresaId}`;
 
       this.$copyText(link).then(
         () => {
