@@ -133,12 +133,15 @@
         </b-table-column>
         <b-table-column field="acoes">
           <div class="flex text-sm items-center">
-            <a href="#" class="mr-4 bg-primary-600 rounded-full p-2" @click.prevent="openGuiasModal(props.row)">
+            <a href="#" class="bg-primary-600 rounded-full p-2" @click.prevent="validateGUias(props.row)">
+              <Icon-Check class="text-neutral-100" size="4"/>
+            </a> 
+            <a href="#" class="ml-4 bg-primary-600 rounded-full p-2" @click.prevent="openGuiasModal(props.row)">
               <Icon-Eye class="text-neutral-100" size="4"/>
             </a>
-            <a href="#" class="bg-primary-600 rounded-full p-2" @click.prevent="sendGuia(props.row)">
+            <!-- <a href="#" class="bg-primary-600 rounded-full p-2" @click.prevent="sendGuia(props.row)">
               <Icon-Mail class="text-neutral-100" size="4"/>
-            </a>
+            </a> -->
           </div>
         </b-table-column>
       </template>
@@ -156,7 +159,8 @@ import {
   empresasWithGuiasRequest, getUploadReport,
   liberaGuiasRequest,
   sendGuiaRequest,
-  sendGuiasRequest
+  sendGuiasRequest,
+  validateGuias
 } from '@/services/requests/guias'
 import {formatBrToEn, formatDateTimeToBr} from '@/utils/momentHelpers'
 import {monthNames} from '@/utils/utils'
@@ -375,6 +379,15 @@ export default {
         type: 'is-primary',
         hasIcon: true,
         onConfirm: () => this.onSendGuia(empresa)
+      })
+    },
+    validateGUias(empresa){
+      const data = {
+        empresaId: empresa.id,
+        dataCompetencia: this.getCompetenciaDate
+      }
+      validateGuias(data).then((res) => {
+        console.log(res.data)
       })
     },
     onSendGuia(empresa) {
