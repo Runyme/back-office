@@ -304,6 +304,22 @@ export default {
             ]
           },
           {
+            label: 'PGBL',
+            icon: 'Document',
+            items: [
+              {
+                label: 'Gerenciamento',
+                // to: 'guias.gerenciamento',
+                icon: 'Setting',
+              },
+              {
+                label: 'Upload',
+                // to: 'guias.upload',
+                icon: 'UploadCloud',
+              },
+            ]
+          },
+          {
             label: 'Irpf',
             icon: 'FileDocumentBox',
             items: [
