@@ -314,7 +314,6 @@ export default {
               },
               {
                 label: 'Upload',
-                // to: 'guias.upload',
                 icon: 'UploadCloud',
               },
             ]
