@@ -387,7 +387,11 @@ export default {
         dataCompetencia: this.getCompetenciaDate
       }
       validateGuias(data).then((res) => {
-        console.log(res.data)
+        let { DAS, HONORARIOS, IRRF } = res.data.success;
+        if(res.data.success) this.$snack.success(`Validado os documentos: ${HONORARIOS? "HONORARIOS" : ''} ${DAS ? ",DAS" : ''} ${IRRF? ",IRRF" : ''}`)
+        if(res.data.success == false) this.$snack.error('Não existe nenhum documento')
+      }).catch((err) => {
+        this.$snack.error(err.response.data.message)
       })
     },
     onSendGuia(empresa) {
