@@ -11,7 +11,7 @@ export const uploadGuiasRequest = (payload) => {
 };
 
 export const validateGuias = (payload) => {
-  return http.post('/guias/teste', payload)
+  return http.post('/guias/validate-guias', payload)
 };
 
 export const empresasWithGuiasRequest = (params) => {
