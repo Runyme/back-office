@@ -10,6 +10,10 @@ export const uploadGuiasRequest = (payload) => {
   return http.post('/guias/upload', payload)
 };
 
+export const validateGuias = (payload) => {
+  return http.post('/guias/teste', payload)
+};
+
 export const empresasWithGuiasRequest = (params) => {
   return http.get(`/guias/empresas`, {
     params: {...params}
