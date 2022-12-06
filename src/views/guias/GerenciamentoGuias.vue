@@ -389,7 +389,7 @@ export default {
       validateGuias(data).then((res) => {
         let { DAS, HONORARIOS, IRRF } = res.data.success;
         if(res.data.success) this.$snack.success(`Validado os documentos: ${HONORARIOS? "HONORARIOS" : ''} ${DAS ? ",DAS" : ''} ${IRRF? ",IRRF" : ''}`)
-        if(res.data.success == false) this.$snack.error('Não existe nenhum documento')
+        if(res.data.success == false) this.$snack.error('Não existe nenhum documento HONORARIOS, DAS, IRRF')
       }).catch((err) => {
         this.$snack.error(err.response.data.message)
       })
