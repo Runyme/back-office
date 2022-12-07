@@ -139,9 +139,9 @@
             <a href="#" class="ml-4 bg-primary-600 rounded-full p-2" @click.prevent="openGuiasModal(props.row)">
               <Icon-Eye class="text-neutral-100" size="4"/>
             </a>
-            <!-- <a href="#" class="bg-primary-600 rounded-full p-2" @click.prevent="sendGuia(props.row)">
+            <a href="#" class="ml-4 bg-primary-600 rounded-full p-2" @click.prevent="sendGuia(props.row)">
               <Icon-Mail class="text-neutral-100" size="4"/>
-            </a> -->
+            </a>
           </div>
         </b-table-column>
       </template>
