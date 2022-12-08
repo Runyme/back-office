@@ -480,9 +480,16 @@ export default {
       };
       validateGuias(data)
         .then((res) => {
-          let { message, success, arquivos } = res.data;
+          let { message, success, arquivos, missing } = res.data;
           
-          if (success) this.$snack.success(message);
+          if (success){ 
+            this.$snack.success(message)
+            if(!missing){
+              empresa.guia_liberacao[0].contabilidade_departamento_liberacao = true
+              empresa.guia_liberacao[0].rh_departamento_liberacao = true
+              empresa.guia_liberacao[0].financeiro_departamento_liberacao = true
+            }
+          }
           if (!success) this.$snack.error(message);
         })
         .catch((err) => {
