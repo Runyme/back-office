@@ -1,24 +1,22 @@
 <template>
   <div>
-    <Lynx-Title text="Upload de PGBL"/>
-    <Lynx-OverlayProgressBar
-      :value="(progressBar.done * 100) / progressBar.total"
-      :show-value="`Enviando ${ progressBar.done } de ${ progressBar.total } arquivos`"
-      :loading="progressBar.shouldShow"
-    />
-    <DragAndDropInput @upload="handleUpload"/>
+    <Lynx-Title text="Upload de PGBL" />
+    <Lynx-OverlayProgressBar :value="(progressBar.done * 100) / progressBar.total"
+      :show-value="`Enviando ${progressBar.done} de ${progressBar.total} arquivos`"
+      :loading="progressBar.shouldShow" />
+    <DragAndDropInput @upload="handleUpload" />
   </div>
 </template>
 
 <script>
-import {mapGetters} from "vuex";
-import {uploadGuiasRequest} from "@/services/requests/guias";
+import { mapGetters } from "vuex";
+import { uploadPgblRequest } from "@/services/requests/pgbl";
 import DragAndDropInput from "@/components/shared/DragAndDropInput";
 import base64Files from "@/mixins/base64Files";
 
 export default {
-  name: 'UploadGuias',
-  components: {DragAndDropInput},
+  name: 'UploadPGBL',
+  components: { DragAndDropInput },
   mixins: [base64Files],
   data: () => ({
     progressBar: {
@@ -52,7 +50,7 @@ export default {
     },
     async processAndUpload(chunk) {
       return await this.base64Files(chunk).then(async filesBase64Encoded => {
-        const guias = filesBase64Encoded.map(file => ({
+        const extrato = filesBase64Encoded.map(file => ({
           name: file.name,
           base64: file.base64,
           competencia: this.getCompetenciaDate
@@ -60,8 +58,8 @@ export default {
 
         let upload
         try {
-          upload = await this.uploadGuias(guias)
-        }catch (e){
+          upload = await this.uploadPgbl(extrato)
+        } catch (e) {
           upload = false
         }
 
@@ -73,11 +71,11 @@ export default {
         }
       });
     },
-    async uploadGuias(guias) {
-      return uploadGuiasRequest({guias})
+    async uploadPgbl(extrato) {
+      return uploadPgblRequest({ extrato })
         .then(() => true)
-        .catch(() => {
-          this.$snack.error('Erro ao realizar upload de algumas guias.');
+        .catch((err) => {
+          this.$snack.error('Erro ao realizar upload de alguns extratos.' + err.response.data['message']);
           return false
         });
     },
