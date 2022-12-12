@@ -309,11 +309,12 @@ export default {
             items: [
               {
                 label: 'Gerenciamento',
-                // to: 'guias.gerenciamento',
+                to: 'pgbl.gerenciamento',
                 icon: 'Setting',
               },
               {
                 label: 'Upload',
+                to: 'pgbl.upload',
                 icon: 'UploadCloud',
               },
             ]

@@ -65,6 +65,10 @@ import GerenciamentoGuias from '@/views/guias/GerenciamentoGuias'
 import UploadGuias from '@/views/guias/UploadGuias'
 import GuiasNaoProcessadas from "@/views/guias/GuiasNaoProcessadas";
 
+//PAGES - PGBL
+import GerenciamentoPgbl from '@/views/pgbl/GerenciamentoPGBL'
+import UploadPGBL from '@/views/pgbl/UploadPGBL'
+
 //PAGES - RECEITAS
 import GerenciamentoReceitas from '@/views/receitas/GerenciamentoReceitas'
 import UploadReceitas from '@/views/receitas/UploadReceitas'
@@ -383,6 +387,25 @@ const routes = [
         path: '/upload-guias',
         name: 'guias.upload',
         component: UploadGuias,
+        meta: {
+          title: 'Upload de Guias',
+          middleware: baseMiddleware
+        }
+      },
+       //PAGES - PGBL
+       {
+        path: '/pgbl',
+        name: 'pgbl.gerenciamento',
+        component: GerenciamentoPgbl,
+        meta: {
+          title: 'Gerenciamento de PGBL',
+          middleware: baseMiddleware
+        }
+      },
+      {
+        path: '/upload-guias',
+        name: 'pgbl.upload',
+        component: UploadPGBL,
         meta: {
           title: 'Upload de Guias',
           middleware: baseMiddleware
