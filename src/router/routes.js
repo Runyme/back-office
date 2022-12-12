@@ -403,11 +403,11 @@ const routes = [
         }
       },
       {
-        path: '/upload-guias',
+        path: '/upload-pgbl',
         name: 'pgbl.upload',
         component: UploadPGBL,
         meta: {
-          title: 'Upload de Guias',
+          title: 'Upload de PGBL',
           middleware: baseMiddleware
         }
       },
