@@ -67,6 +67,7 @@ import GuiasNaoProcessadas from "@/views/guias/GuiasNaoProcessadas";
 
 //PAGES - PGBL
 import GerenciamentoPgbl from '@/views/pgbl/GerenciamentoPGBL'
+import RelatorioPgbl from '@/views/pgbl/RelatorioPGBL'
 import UploadPGBL from '@/views/pgbl/UploadPGBL'
 
 //PAGES - RECEITAS
@@ -408,6 +409,15 @@ const routes = [
         component: UploadPGBL,
         meta: {
           title: 'Upload de PGBL',
+          middleware: baseMiddleware
+        }
+      },
+      {
+        path: '/pgbl/relatorio',
+        name: 'pgbl.relatorio',
+        component: RelatorioPgbl,
+        meta: {
+          title: 'Relatório PGBL',
           middleware: baseMiddleware
         }
       },
