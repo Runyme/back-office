@@ -313,6 +313,11 @@ export default {
                 icon: 'Setting',
               },
               {
+                label: 'Relatório',
+                to: 'pgbl.relatorio',
+                icon: 'FileDocumentBox',
+              },
+              {
                 label: 'Upload',
                 to: 'pgbl.upload',
                 icon: 'UploadCloud',

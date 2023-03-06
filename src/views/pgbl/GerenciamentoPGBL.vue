@@ -5,118 +5,161 @@
       <Lynx-Title text="Gerenciamento de PGBL" />
 
       <div class="flex flex-row-reverse items-end mb-4">
-        <b-button
-          class="is-primary ml-4"
-          icon-right="refresh"
-          @click.native="
-            () => {
-              fetchEmpresasWithGuias();
-              fetchUploadReport();
-            }
-          "
-          >Atualizar Lista
+        <b-button class="is-primary ml-4" icon-right="refresh" @click.native="
+          () => {
+            fetchUploadReport();
+            fetchStatusList();
+          }
+        ">Atualizar Lista
         </b-button>
       </div>
     </div>
-
     <div class="w-full flex justify-between">
       <div class="flex justify-start w-2/3">
-        <label class="pb-4">
+        <!--label class="pb-4">
           <Lynx-Label label="Competência" />
-          <b-datepicker
-            type="month"
-            placeholder="Selecione a data de competência"
-            icon="calendar-today"
-            :month-names="monthNames"
-            v-model="dataCompetencia"
-            @input="fetchEmpresasWithGuias"
-          />
+          <b-datepicker type="month" placeholder="Data de competência" icon="calendar-today" :month-names="monthNames"
+            v-model="dataCompetencia" @input="fetchStatusList" :icon-right="dataCompetencia ? 'close-circle' : ''"
+            icon-right-clickable @icon-right-click="clearDataCompetencia" trap-focus />
         </label>
-
         <label class="pb-4 ml-4">
           <Lynx-Label label="Data de Envio" />
-          <b-datepicker
-            placeholder="Selecione a data de envio"
-            icon="calendar-today"
-            :month-names="monthNames"
-            v-model="dataEnvio"
-            @input="fetchEmpresasWithGuias"
-          />
-        </label>
+          <b-datepicker placeholder="Data de envio" icon="calendar-today" :month-names="monthNames" v-model="dataEnvio"
+            @input="fetchStatusList" :icon-right="dataEnvio ? 'close-circle' : ''" icon-right-clickable
+            @icon-right-click="clearDataEnvio" trap-focus />
+        </label-->
+      </div>
+
+      <div class="flex flex-row-reverse items-end mb-4 w-1/3">
+        <div class="control ml-4">
+          <b-taglist attached>
+            <b-tag type="is-primary" size="is-medium">Processando:</b-tag>
+            <b-tag type="is-warning" size="is-medium">{{
+                uploadReport.total || "..."
+            }}</b-tag>
+          </b-taglist>
+        </div>
+        <div class="control">
+          <b-taglist attached>
+            <b-tag type="is-primary" size="is-medium">Erros:</b-tag>
+            <b-tag type="is-danger" size="is-medium">{{
+                uploadReport.withError || "..."
+            }}</b-tag>
+          </b-taglist>
+        </div>
       </div>
     </div>
 
-    <b-table
-      :data="empresas"
-      :columns="columns"
-      :paginated="true"
-      default-sort-direction="asc"
-      default-sort="id"
-      per-page="10"
-      class="w-full"
-    >
+    <b-table :data="statusList" :paginated="true" height="480" default-sort-direction="asc" default-sort="id"
+      per-page="10" class="w-full" sticky-header>
       <template slot-scope="props">
-        <b-table-column field="id" v-text="props.row.id" />
-        <b-table-column field="clientes_id" v-text="props.row.clientes_id" />
-        <b-table-column field="data_competencia" v-text="props.row.data_competencia" />
-        <b-table-column field="renumeracao" v-text="props.row.renumeracao" />
-        <b-table-column field="indicadores" v-text="props.row.indicadores" />
-        <b-table-column field="tipo" v-text="props.row.tipo" />
-        <b-table-column field="cnpj_contratante" v-text="props.row.cnpj_contratante" />
-        <b-table-column field="acoes">
+        <b-table-column field="empresas_id" searchable sortable label="Cód. Empresa" v-text="props.row.empresas_id" />
+        <b-table-column field="clientes_id" searchable sortable label="Cód. Cliente" v-text="props.row.clientes_id" />
+        <b-table-column field="nome_completo" searchable sortable label="Nome">
+          {{ props.row.nome_completo }}
+          / {{ props.row.cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') }}
+        </b-table-column>
+
+        <b-table-column field="status" sortable label="Situação / Data">
+          <a v-if="props.row.status == 9" @click.prevent="alertCustomError(props.row.error_message)">
+            <b-tag :type="statusColor(props.row.status)">{{ statusText(props.row.status) }}
+            </b-tag>
+            {{ props.row.status_date != undefined ? new Date(props.row.status_date).toLocaleString('pt-BR', {
+                timeZone:
+                  'UTC'
+              })
+                : ''
+            }}
+          </a>
+          <a v-else-if="props.row.status == undefined" @click.prevent="gotoUploadFile()">
+            <b-tag :type="statusColor(props.row.status)">{{ statusText(props.row.status) }}
+            </b-tag>
+          </a>
+          <div v-else>
+            <b-tag :type="statusColor(props.row.status)">{{ statusText(props.row.status) }}
+            </b-tag>
+            {{ props.row.status_date != undefined ? new Date(props.row.status_date).toLocaleString('pt-BR', {
+                timeZone:
+                  'UTC'
+              })
+                : ''
+            }}
+          </div>
+        </b-table-column>
+
+        <b-table-column field="job_date" sortable label="Data de Envio">
+          {{ props.row.job_date != undefined ? new Date(props.row.job_date).toLocaleString('pt-BR', { timeZone: 'UTC' })
+              : '-'
+          }}
+        </b-table-column>
+        <b-table-column field="nome_original" sortable label="Arquivo">
+          <a @click.prevent="baixarArquivo(props.row.clientes_id, props.row.nome_original)"><b-icon
+              v-if="props.row.nome_original != undefined" icon="file-download" />{{ props.row.nome_original
+              }} </a>
+        </b-table-column>
+        <b-table-column field="de" sortable label="Período Extraído">
+          {{ props.row.de != undefined ? new Date(props.row.de).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : ''
+          }} -
+          {{ props.row.ate != undefined ? new Date(props.row.ate).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : ''
+          }}
+        </b-table-column>
+
+
+        <b-table-column label="Ações" field="acoes">
           <div class="flex text-sm items-center">
-            <a
-              href="#"
-              class="bg-primary-600 rounded-full p-2"
-              @click.prevent="validateGUias(props.row)"
-            >
-              <Icon-Check class="text-neutral-100" size="4" />
-            </a>
-            <a
-              href="#"
-              class="ml-4 bg-primary-600 rounded-full p-2"
-              @click.prevent="openGuiasModal(props.row)"
-            >
-              <Icon-Eye class="text-neutral-100" size="4" />
-            </a>
+
+            <button v-if="props.row.status != 0" title="Fazer Upload de Arquivo"
+              class="bg-primary-600 rounded-full p-1 ml-2" @click.prevent="gotoUploadFile()">
+              <b-icon class="text-white" icon="file-upload" size="is-default" />
+            </button>
+
+            <button v-else disabled class="bg-disabled rounded-full p-1 ml-2">
+              <b-icon class="text-white" icon="file-upload" size="is-default" />
+            </button>
+
+
+            <button v-if="props.row.status == 1" title="Mostrar Relatório De Importação para o cliente"
+              class="bg-primary-600 rounded-full p-1 ml-2" @click.prevent="opendetailsModal(props.row)">
+              <b-icon class="text-white" icon="view-list" size="is-default" />
+            </button>
+
+            <button v-else disabled class="bg-disabled rounded-full p-1 ml-2">
+              <b-icon class="text-white" icon="view-list" size="is-default" />
+            </button>
+
+            <button v-if="props.row.status == 0" title="Forçar Processamento Imediato"
+              class="bg-primary-600 rounded-full p-1 ml-2" @click.prevent="forceProcess(props)">
+              <b-icon class="text-white" icon="fast-forward" size="is-default" />
+            </button>
+
+            <button v-else disabled class="bg-disabled rounded-full p-1 ml-2">
+              <b-icon class="text-white" icon="fast-forward" size="is-default" />
+            </button>
+
+
+
+
           </div>
         </b-table-column>
       </template>
     </b-table>
-    <b-modal
-      :active.sync="guiasModal"
-      @close="closeGuiasModal"
-      v-if="guiasModal"
-    >
-      <GerenciamentoGuiasDetails
-        :current-empresa="currentEmpresa"
-        @estornar="fetchEmpresasWithGuias"
-      />
+    <b-modal :active.sync="detailsModal" @close="closedetailsModal" v-if="detailsModal">
+      <PgblDetails :extrato="extrato" :cpf="cpfCorrente" :clientes-id="clienteCorrente" :nome-completo="nomeCompletoCorrente" />
     </b-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import {
-  chageLiberacaoRequest,
-  empresasWithGuiasRequest,
-  getUploadReport,
-  liberaGuiasRequest,
-  sendGuiaRequest,
-  sendGuiasRequest,
-  validateGuias,
-} from "@/services/requests/guias";
-import { formatBrToEn, formatDateTimeToBr } from "@/utils/momentHelpers";
-import data from "./json"
+import { getUploadReport, getJobsStatus, getExtratoPrevidenciario, processJob, getRelatorioDetalhadoCliente, } from "@/services/requests/pgbl";
+import { formatBrToEn } from "@/utils/momentHelpers";
 import { monthNames } from "@/utils/utils";
-import GerenciamentoGuiasDetails from "@/views/guias/GerenciamentoGuiasDetails";
+import PgblDetails from "@/views/pgbl/PgblDetails";
 import { hasPermission } from "@/utils/can";
-import { carteirasRequest } from "../../services/requests/carteiras";
 
 export default {
-  name: "GerenciamentoGuias",
-  components: { GerenciamentoGuiasDetails },
+  name: "GerenciamentoPgbl",
+  components: { PgblDetails },
   data() {
     return {
       monthNames,
@@ -124,59 +167,15 @@ export default {
       dataEnvio: null,
       loading: false,
       carteiras: [],
-      carteira_filter: "todas",
-      columns: [
-        {
-          field: "id",
-          label: "Empresa",
-          searchable: true,
-          sortable: true,
-        },
-        {
-          field: "clientes_id",
-          label: "Clientes",
-          sortable: true,
-        },
-        {
-          field: "data_competencia",
-          label: "Competencia.",
-        },
-        {
-          field: "renumeracao",
-          label: "Remuneraćão",
-        },
-        {
-          field: "indicadores",
-          label: "indicadores.",
-        },
-        {
-          field: "tipo",
-          label: "tipo",
-        },
-        {
-          field: "cnpj_contratante",
-          label: "cnpj contratante",
-        },
-        {
-          field: "acoes",
-          label: "Ações",
-        },
-      ],
-      empresas: [],
-      currentEmpresa: {},
-      guiasModal: false,
+      statusList: [],
+      extrato: [],
+      cpfCorrente: '',
+      clienteCorrente: '',
+      nomeCompletoCorrente: '',
+      detailsModal: false,
       filter_status: null,
       uploadReport: {},
       uploadReportInterval: null,
-      status_guias: [
-        { id: 0, status: "Todas" },
-        { id: 1, status: "Enviado" },
-        { id: 6, status: "Não enviado" },
-        { id: 2, status: "Com Erro" },
-        { id: 3, status: "Pendente Financeiro" },
-        { id: 4, status: "Pendente RH" },
-        { id: 5, status: "Pendente Contabilidade" },
-      ],
     };
   },
   computed: {
@@ -186,196 +185,160 @@ export default {
         ? formatBrToEn(this.dataCompetencia)
         : this.getCompetenciaDate;
     },
-    
   },
-  
+
   mounted() {
-    this.fetchCarteiras();
+    this.fetchStatusList();
+    this.fetchUploadReport();
+    this.uploadReportInterval = setInterval(
+      () => this.fetchUploadReport(),
+      15000
+    );
   },
+
   destroyed() {
     clearInterval(this.uploadReportInterval);
   },
+
   methods: {
     hasPermission,
-    fetchCarteiras() {
-      this.empresas = data
+
+    clearDataCompetencia() {
+      this.dataCompetencia = null;
     },
+
+    clearDataEnvio() {
+      this.dataEnvio = null;
+    },
+
+    gotoUploadFile() {
+      this.$router.push({ path: `/upload-pgbl` });
+    },
+
+    async baixarArquivo(clientes_id, nome) {
+      this.loading = true;
+      getExtratoPrevidenciario(clientes_id).then((response) => {
+        if (!response) return
+        const linkSource = `data:application/pdf;base64,${response.data}`
+        const downloadLink = document.createElement('a')
+        const fileName = nome
+        downloadLink.href = linkSource
+        downloadLink.download = fileName
+        downloadLink.click()
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
+
+    statusColor(status) {
+
+      if (status == undefined || status == null)
+        return "is-default";
+
+      // status: 0=Pendente, 1=Processado, 2=Arquivado, 8=Cancelado, 9=Erro
+      switch (status) {
+        case 0:
+          return "is-warning";
+        case 1:
+          return "is-success";
+        case 9:
+          return "is-danger";
+        default:
+          return "is-light";
+      }
+    },
+    statusText(status) {
+
+      if (status == undefined || status == null)
+        return "Upload Pendente";
+
+      // status: 0=Pendente, 1=Processado, 2=Arquivado, 8=Cancelado, 9=Erro
+      switch (status) {
+        case 0:
+          return "Processamento Pendente";
+        case 1:
+          return "Processado";
+        case 2:
+          return "Arquivado";
+        case 8:
+          return "Cancelado";
+        case 9:
+          return "Erro";
+        default:
+          return "Indefinido";
+      }
+    },
+
     fetchUploadReport() {
       getUploadReport()
         .then((response) => (this.uploadReport = response.data))
         .catch(() => this.$snack.error("Erro ao calcular Uploads pendentes."));
     },
-    changeLiberacao(empresa, departamento) {
-      let guiaLiberacao = empresa.guia_liberacao;
-      if (
-        !(
-          guiaLiberacao &&
-          guiaLiberacao.length &&
-          guiaLiberacao[0][departamento]
-        )
-      ) {
-        this.liberaEnvio(empresa, departamento);
-        return;
-      }
-      this.removeLiberacaoEnvio(empresa, departamento);
-    },
-    isGuiaLiberadoParaEnvio(guiaLiberacao) {
-      return (
-        guiaLiberacao &&
-        guiaLiberacao.length > 0 &&
-        guiaLiberacao[0].rh_departamento_liberacao &&
-        guiaLiberacao[0].contabilidade_departamento_liberacao
-      );
-    },
-    liberaEnvio(empresa, departamento) {
-      this.chageLiberacaoRequest(true, empresa, departamento);
-    },
-    removeLiberacaoEnvio(empresa, departamento) {
-      this.chageLiberacaoRequest(false, empresa, departamento);
-    },
-    chageLiberacaoRequest(liberado, empresa, departamento) {
-      const data = {
-        [departamento]: liberado,
-        empresaId: empresa.id,
-        dataCompetencia: this.getCompetenciaDate,
-      };
-      chageLiberacaoRequest(data)
-        .then(() => (empresa.guia_liberacao[0][departamento] = liberado))
-        .catch((error) => {
-          this.$snack.error(error.response.data.message);
-          empresa.guia_liberacao[0][departamento] = !liberado;
-        });
-    },
-    sendGuia(empresa) {
-      this.$buefy.dialog.confirm({
-        title: "Estornar Guia",
-        message: "Tem certeza que deseja enviar este email agora?",
-        confirmText: "Enviar",
-        cancelText: "Cancelar",
-        type: "is-primary",
-        hasIcon: true,
-        onConfirm: () => this.onSendGuia(empresa),
-      });
-    },
-    validateGUias(empresa) {
-      const data = {
-        empresaId: empresa.id,
-        dataCompetencia: this.getCompetenciaDate,
-      };
-      validateGuias(data)
-        .then((res) => {
-          let { message, success, arquivos, missing } = res.data;
-          
-          if (success){ 
-            this.$snack.success(message)
-            if(!missing){
-              empresa.guia_liberacao[0].contabilidade_departamento_liberacao = true
-              empresa.guia_liberacao[0].rh_departamento_liberacao = true
-              empresa.guia_liberacao[0].financeiro_departamento_liberacao = true
-            }
-          }
-          if (!success) this.$snack.error(message);
-        })
-        .catch((err) => {
-          this.$snack.error(err.response.data.message);
-        });
-    },
-    onSendGuia(empresa) {
-      const guiaLiberacao =
-        empresa.guia_liberacao && empresa.guia_liberacao.length > 0
-          ? empresa.guia_liberacao[0]
-          : null;
-      if (!this.validateLiberacao(guiaLiberacao)) {
-        return;
-      }
+
+    forceProcess(row) {
       this.loading = true;
-      const data = {
-        competencia: guiaLiberacao.competencia,
-        guiaLiberacaoId: guiaLiberacao.id,
-      };
-      sendGuiaRequest(data)
-        .then((res) => {
-          this.$snack.success(res.data.message);
-          this.fetchEmpresasWithGuias();
+      processJob(row.row.job_id)
+        .then(() => {
+          this.fetchUploadReport();
+          this.fetchStatusList();
         })
-        .catch((err) =>
-          this.$snack.error(err.response.data.message || err.message)
-        )
-        .finally(() => (this.loading = false));
-    },
-    validateLiberacao(guiaLiberacao) {
-      if (!guiaLiberacao) {
-        this.$snack.error(
-          "Por favor aguarde a liberação para enviar as guias."
-        );
-        return false;
-      }
-      if (!guiaLiberacao.rh_departamento_liberacao) {
-        this.$snack.error("Por favor aguarde a liberação do RH.");
-        return false;
-      }
-      if (!guiaLiberacao.contabilidade_departamento_liberacao) {
-        this.$snack.error("Por favor aguarde a liberação da Contabilidade.");
-        return false;
-      }
-      if (!guiaLiberacao.financeiro_departamento_liberacao) {
-        this.$snack.error("Por favor aguarde a liberação Financeiro.");
-        return false;
-      }
-      return true;
-    },
-    openGuiasModal(empresa) {
-      this.currentEmpresa = empresa;
-      this.guiasModal = true;
-    },
-    closeGuiasModal() {
-      this.guiasModal = false;
-      this.currentEmpresa = {};
-    },
-    handleLiberacaoTodas() {
-      this.$buefy.dialog.confirm({
-        title: "Liberação de guias",
-        message:
-          "Esta ação irá liberar para envio conforme as guias que estão anexadas. Deseja continuar?",
-        confirmText: "Sim",
-        cancelText: "Cancelar",
-        type: "is-primary",
-        hasIcon: true,
-        onConfirm: () => this.liberacaoTodas(),
-      });
-    },
-    liberacaoTodas() {
-      this.loading = true;
-      liberaGuiasRequest(this.dataCompetenciaComputed)
-        .then((response) => this.$snack.success(response.data.message))
-        .catch((error) => this.$snack.error(error.response.data.message))
+        .catch(() => this.$snack.error("Erro forçar processamento de upload."))
         .finally(() => {
           this.loading = false;
-          this.fetchEmpresasWithGuias();
         });
     },
-    handleEnvioTodas() {
-      this.$buefy.dialog.confirm({
-        title: "Liberação de guias",
-        message:
-          "Esta ação irá enviar todas as guias liberadas. Deseja continuar?",
-        confirmText: "Sim",
-        cancelText: "Cancelar",
-        type: "is-primary",
-        hasIcon: true,
-        onConfirm: () => this.enviaTodos(),
-      });
-    },
-    enviaTodos() {
+
+    fetchStatusList() {
       this.loading = true;
-      sendGuiasRequest(this.dataCompetenciaComputed)
-        .then((response) => this.$snack.success(response.data.message))
-        .catch((error) => this.$snack.error(error.response.data.message))
+      getJobsStatus()
+        .then((response) => (this.statusList = response.data.data))
+        .catch(() => this.$snack.error("Erro ao calcular Uploads pendentes."))
         .finally(() => {
           this.loading = false;
-          this.fetchEmpresasWithGuias();
         });
     },
+
+    alertCustomError(message) {
+      this.$buefy.dialog.alert({
+        title: 'Erro',
+        message: message,
+        type: 'is-danger',
+        hasIcon: true,
+        icon: 'times-circle',
+        iconPack: 'fa',
+        ariaRole: 'alertdialog',
+        ariaModal: true
+      })
+    },
+
+    opendetailsModal(row) {
+      this.loading = true;
+      this.extrato = [];
+      getRelatorioDetalhadoCliente(row.clientes_id)
+        .then((response) => {
+          this.extrato = response.data.data;
+          this.cpfCorrente = row.cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+          this.clienteCorrente = row.clientes_id;
+          this.nomeCompletoCorrente = row.nome_completo;
+          this.detailsModal = true;
+        })
+        .catch(() => this.$snack.error("Erro ao calcular Uploads pendentes."))
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+
+    closedetailsModal() {
+      this.detailsModal = false;
+      this.extrato = {};
+    },
+
   },
 };
 </script>
+<style scoped>
+.bg-disabled {
+  background-color: lightgray;
+  cursor: default !important;
+}
+</style>
