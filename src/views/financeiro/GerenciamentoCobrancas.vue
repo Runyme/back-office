@@ -124,7 +124,7 @@
 
       dataEnvio: val => {
 
-        if (val.data_vencimento > momentIntance().format('YYYY-MM-DD') && val.status === 'pendente') {
+        if (val.data_vencimento < momentIntance().format('YYYY-MM-DD') && val.status === 'pendente') {
           return 'Atrasado'
         }
 
