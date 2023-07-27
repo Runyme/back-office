@@ -68,6 +68,23 @@
           size="small"
           @click.native="openModal"
         />
+        <a
+          target="_blank"
+          style="
+          text-decoration: none;
+          color: inherit;"
+          :href="acessoPrefeituraFiltered.site"
+          v-text="acessoPrefeituraFiltered.site"
+        >
+          <Lynx-Button
+          text="Detalhes"
+          class="my-4"
+          icon="Eye"
+          icon-size="4"
+          size="small"
+          @click.native="openModal"
+        />
+        </a>
       </div>
     </b-collapse>
     <b-modal :active.sync="modal">
