@@ -68,16 +68,14 @@
           size="small"
           @click.native="openModal"
         />
-       
-          <Lynx-Button
-          href="http://plataforma.runy.me"
+        <Lynx-Button
           text="Emissor de nota"
           class="my-4"
           icon="FileDocumentBox"
           icon-size="4"
           size="small"
+          href="http://plataforma.runy.me"
         />
-
       </div>
     </b-collapse>
     <b-modal :active.sync="modal">
